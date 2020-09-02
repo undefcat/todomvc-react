@@ -1,27 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Todo from './Todo'
 
-function Body() {
+function Body(props) {
+  const { todos, removeTodo, toggleTodo, changeTitleTodo } = props
+  const TodoList = todos.map(todo => (
+    <Todo
+      changeTitleTodo={changeTitleTodo}
+      key={todo.id}
+      removeTodo={removeTodo}
+      toggleTodo={toggleTodo}
+      todo={todo} />
+    ))
+
+  const { toggleAllTodo } = props
+  const [ toggleAll, setToggleAll ] = useState(false)
+  function handleChange(e) {
+    setToggleAll(e.target.checked)
+    toggleAllTodo(e.target.checked)
+  }
+
   return (
     <section className="main">
-      <input id="toggle-all" className="toggle-all" type="checkbox" />
+      <input
+        id="toggle-all"
+        className="toggle-all"
+        type="checkbox"
+        value={toggleAll}
+        onChange={handleChange}
+      />
       <label htmlFor="toggle-all">Mark all as complete</label>
       <ul className="todo-list">
-        <li className="completed">
-          <div className="view">
-            <input className="toggle" type="checkbox" checked />
-            <label>Taste JavaScript</label>
-            <button className="destroy" />
-          </div>
-          <input className="edit" value="Create a TodoMVC template" />
-        </li>
-        <li>
-          <div className="view">
-            <input className="toggle" type="checkbox" />
-            <label>Buy a unicorn</label>
-            <button className="destroy" />
-          </div>
-          <input className="edit" value="Rule the web" />
-        </li>
+        { TodoList }
       </ul>
     </section>
   )
